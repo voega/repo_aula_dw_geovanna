@@ -1,0 +1,26 @@
+{
+	"name": "tbproduto",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "origemoracleg",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "TabelasDBURGUERorcl"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "tbproduto",
+				"container": "origemoracleg"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}

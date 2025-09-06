@@ -1,0 +1,12 @@
+{
+	"name": "CD_ORCL_FIAPG",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ORCL_FIAPG",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "OracleTable",
+		"schema": []
+	}
+}
