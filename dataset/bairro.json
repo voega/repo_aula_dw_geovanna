@@ -1,5 +1,5 @@
 {
-	"name": "tbproduto",
+	"name": "bairro",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "origemcp",
@@ -13,12 +13,12 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"fileName": "tbproduto",
-				"container": "origemoracleg"
+				"fileName": "bairro",
+				"container": "origemcp"
 			},
 			"columnDelimiter": ",",
 			"escapeChar": "\\",
-			"firstRowAsHeader": true,
+			"firstRowAsHeader": false,
 			"quoteChar": "\""
 		},
 		"schema": []

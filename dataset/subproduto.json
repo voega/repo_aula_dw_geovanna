@@ -2,7 +2,7 @@
 	"name": "subproduto",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "origemoracleg",
+			"referenceName": "origemcp",
 			"type": "LinkedServiceReference"
 		},
 		"folder": {
