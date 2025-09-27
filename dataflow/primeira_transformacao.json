@@ -19,24 +19,51 @@
 					"name": "endloja"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "RAW",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
 			"transformations": [
 				{
 					"name": "join1"
 				}
 			],
 			"scriptLines": [
-				"source(allowSchemaDrift: true,",
+				"source(output(",
+				"          NR_LOJA as short,",
+				"          NM_LOJA as string,",
+				"          DT_INAUGURACAO as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> loja",
-				"source(allowSchemaDrift: true,",
+				"source(output(",
+				"          CD_LOJA_END as short,",
+				"          NR_LOJA as short,",
+				"          CD_LOGRADOURO as short,",
+				"          NR_END as short,",
+				"          DS_COMPLEMENTO_END as string,",
+				"          DT_INICIO as string,",
+				"          DT_TERMINO as string,",
+				"          ST_END as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> endloja",
-				"loja, endloja join(ERROR_FUNCTION('') == ERROR_FUNCTION(''),",
+				"loja, endloja join(loja@NR_LOJA == endloja@NR_LOJA,",
 				"     joinType:'inner',",
 				"     matchType:'exact',",
 				"     ignoreSpaces: false,",
-				"     broadcast: 'auto')~> join1"
+				"     broadcast: 'auto')~> join1",
+				"join1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sink1"
 			]
 		}
 	}

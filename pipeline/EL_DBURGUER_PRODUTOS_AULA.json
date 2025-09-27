@@ -3,65 +3,6 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "produto",
-				"type": "Copy",
-				"dependsOn": [],
-				"policy": {
-					"timeout": "0.12:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"source": {
-						"type": "OracleSource",
-						"oracleReaderQuery": "SELECT \n\tcd_sub_categoria_prod,\n\tcd_categoria_prod,\n\tds_sub_categoria_prod, \n\tst_sub_categoria_prod \nFROM DBURGER.DB_SUB_CATEGORIA_PROD;",
-						"partitionOption": "None",
-						"numberPrecision": 38,
-						"numberScale": 18,
-						"queryTimeout": "02:00:00"
-					},
-					"sink": {
-						"type": "DelimitedTextSink",
-						"storeSettings": {
-							"type": "AzureBlobStorageWriteSettings",
-							"copyBehavior": "FlattenHierarchy"
-						},
-						"formatSettings": {
-							"type": "DelimitedTextWriteSettings",
-							"quoteAllText": true,
-							"fileExtension": ".txt"
-						}
-					},
-					"enableStaging": false,
-					"translator": {
-						"type": "TabularTranslator",
-						"typeConversion": true,
-						"typeConversionSettings": {
-							"allowDataTruncation": true,
-							"treatBooleanAsNumber": false
-						}
-					}
-				},
-				"inputs": [
-					{
-						"referenceName": "CD_ORCL_FIAPG",
-						"type": "DatasetReference"
-					}
-				],
-				"outputs": [
-					{
-						"referenceName": "RAW",
-						"type": "DatasetReference",
-						"parameters": {
-							"nome_arquivo": "nm_produto"
-						}
-					}
-				]
-			},
-			{
 				"name": "subproduto",
 				"type": "Copy",
 				"dependsOn": [],
@@ -230,8 +171,11 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "end_loja",
-						"type": "DatasetReference"
+						"referenceName": "RAW",
+						"type": "DatasetReference",
+						"parameters": {
+							"nome_arquivo": "nm_endloja"
+						}
 					}
 				]
 			},
@@ -464,7 +408,7 @@
 				"type": "ExecuteDataFlow",
 				"dependsOn": [
 					{
-						"activity": "produto",
+						"activity": "end_loja",
 						"dependencyConditions": [
 							"Skipped"
 						]
@@ -487,7 +431,18 @@
 				"typeProperties": {
 					"dataflow": {
 						"referenceName": "primeira_transformacao",
-						"type": "DataFlowReference"
+						"type": "DataFlowReference",
+						"datasetParameters": {
+							"loja": {
+								"nome_arquivo": "nm_loja"
+							},
+							"endloja": {
+								"nome_arquivo": "nm_endloja"
+							},
+							"sink1": {
+								"nome_arquivo": "sl_teste1"
+							}
+						}
 					},
 					"compute": {
 						"coreCount": 8,
