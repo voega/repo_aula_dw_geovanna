@@ -1,5 +1,5 @@
 {
-	"name": "RawClientes",
+	"name": "RAW",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "origemcp",
@@ -19,7 +19,7 @@
 					"value": "@dataset().nome_arquivo",
 					"type": "Expression"
 				},
-				"container": "origemarquivos"
+				"container": "origemoracleg"
 			},
 			"columnDelimiter": ",",
 			"escapeChar": "\\",
