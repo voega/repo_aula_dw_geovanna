@@ -53,8 +53,11 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "tbproduto",
-						"type": "DatasetReference"
+						"referenceName": "RAW",
+						"type": "DatasetReference",
+						"parameters": {
+							"nome_arquivo": "nm_produto"
+						}
 					}
 				]
 			},
@@ -109,8 +112,11 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "subproduto",
-						"type": "DatasetReference"
+						"referenceName": "RAW",
+						"type": "DatasetReference",
+						"parameters": {
+							"nome_arquivo": "nm_subproduto"
+						}
 					}
 				]
 			},
@@ -165,8 +171,11 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "loja",
-						"type": "DatasetReference"
+						"referenceName": "RAW",
+						"type": "DatasetReference",
+						"parameters": {
+							"nome_arquivo": "nm_loja"
+						}
 					}
 				]
 			},
@@ -449,6 +458,43 @@
 						"type": "DatasetReference"
 					}
 				]
+			},
+			{
+				"name": "Data flow1",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [
+					{
+						"activity": "produto",
+						"dependencyConditions": [
+							"Skipped"
+						]
+					},
+					{
+						"activity": "loja",
+						"dependencyConditions": [
+							"Skipped"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "primeira_transformacao",
+						"type": "DataFlowReference"
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"traceLevel": "Fine"
+				}
 			}
 		],
 		"annotations": []
