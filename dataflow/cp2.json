@@ -17,12 +17,30 @@
 						"type": "DatasetReference"
 					},
 					"name": "dfclicf"
+				},
+				{
+					"dataset": {
+						"referenceName": "RawClientes",
+						"type": "DatasetReference"
+					},
+					"name": "dbend"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "RawClientes",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
 			"transformations": [
 				{
 					"name": "join1"
+				},
+				{
+					"name": "join2"
 				}
 			],
 			"scriptLines": [
@@ -41,11 +59,27 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> dfclicf",
-				"dbcli join(ERROR_FUNCTION('') == ERROR_FUNCTION(''),",
+				"source(output(",
+				"          NR_CLIENTE as short,",
+				"          CD_LOGRADOURO_CLI as integer",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> dbend",
+				"dbcli, dfclicf join(dbcli@NR_CLIENTE == dfclicf@NR_CLIENTE,",
 				"     joinType:'inner',",
 				"     matchType:'exact',",
 				"     ignoreSpaces: false,",
-				"     broadcast: 'auto')~> join1"
+				"     broadcast: 'auto')~> join1",
+				"join1, dbend join(dbcli@NR_CLIENTE == dbend@NR_CLIENTE,",
+				"     joinType:'inner',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> join2",
+				"join2 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sink1"
 			]
 		}
 	}

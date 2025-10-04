@@ -119,43 +119,6 @@
 				]
 			},
 			{
-				"name": "Data flow1",
-				"type": "ExecuteDataFlow",
-				"dependsOn": [
-					{
-						"activity": "db_cli",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					},
-					{
-						"activity": "df_cli_cf",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"policy": {
-					"timeout": "0.12:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"dataflow": {
-						"referenceName": "cp2",
-						"type": "DataFlowReference"
-					},
-					"compute": {
-						"coreCount": 8,
-						"computeType": "General"
-					},
-					"traceLevel": "Fine"
-				}
-			},
-			{
 				"name": "db_end_cli",
 				"type": "Copy",
 				"dependsOn": [],
@@ -209,6 +172,127 @@
 						"type": "DatasetReference",
 						"parameters": {
 							"nome_arquivo": "db_end_cli"
+						}
+					}
+				]
+			},
+			{
+				"name": "cp2",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [
+					{
+						"activity": "db_cli",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "df_cli_cf",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "db_end_cli",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "logradouro",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "cp2",
+						"type": "DataFlowReference",
+						"datasetParameters": {
+							"dbcli": {
+								"nome_arquivo": "db_cli"
+							},
+							"dfclicf": {
+								"nome_arquivo": "df_cli_cf"
+							},
+							"dbend": {
+								"nome_arquivo": "db_end_cli"
+							},
+							"sink1": {
+								"nome_arquivo": "logradouro"
+							}
+						}
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"traceLevel": "Fine"
+				}
+			},
+			{
+				"name": "logradouro",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "OracleSource",
+						"oracleReaderQuery": "SELECT\n    l.cd_logradouro,\n    c.nm_cidade AS NM_CIDADE,\n    e.nm_estado as NM_ESTADO\nFROM db_logradouro L\nINNER JOIN DB_BAIRRO B ON l.cd_bairro=b.cd_bairro\nINNER JOIN DB_CIDADE C ON b.cd_cidade=c.cd_cidade\nINNER JOIN DB_ESTADO E ON c.sg_estado=e.sg_estado;",
+						"partitionOption": "None",
+						"numberPrecision": 38,
+						"numberScale": 18,
+						"queryTimeout": "02:00:00"
+					},
+					"sink": {
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobStorageWriteSettings"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "CD_ORCL_FIAPG",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "RawClientes",
+						"type": "DatasetReference",
+						"parameters": {
+							"nome_arquivo": "logradouro"
 						}
 					}
 				]
