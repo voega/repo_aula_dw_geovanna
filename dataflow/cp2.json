@@ -1,0 +1,52 @@
+{
+	"name": "cp2",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "RawClientes",
+						"type": "DatasetReference"
+					},
+					"name": "dbcli"
+				},
+				{
+					"dataset": {
+						"referenceName": "RawClientes",
+						"type": "DatasetReference"
+					},
+					"name": "dfclicf"
+				}
+			],
+			"sinks": [],
+			"transformations": [
+				{
+					"name": "join1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          NR_CLIENTE as short,",
+				"          NM_CLIENTE as string,",
+				"          QT_ESTRELAS as short",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> dbcli",
+				"source(output(",
+				"          NR_CLIENTE as short,",
+				"          FL_SEXO as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> dfclicf",
+				"dbcli join(ERROR_FUNCTION('') == ERROR_FUNCTION(''),",
+				"     joinType:'inner',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> join1"
+			]
+		}
+	}
+}
